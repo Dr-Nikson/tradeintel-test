@@ -2,7 +2,7 @@ import { createStore as _createStore, applyMiddleware, compose } from 'redux';
 import createMiddleware from './middleware/clientMiddleware';
 import transitionMiddleware from './middleware/transitionMiddleware';
 
-export default function createStore(reduxReactRouter, getRoutes, createHistory, client, data) {
+export default function createStore(getRoutes, client, data) {
   const middleware = [createMiddleware(client), transitionMiddleware];
 
   let finalCreateStore;
@@ -18,7 +18,7 @@ export default function createStore(reduxReactRouter, getRoutes, createHistory, 
     finalCreateStore = applyMiddleware(...middleware)(_createStore);
   }
 
-  finalCreateStore = reduxReactRouter({ getRoutes, createHistory })(finalCreateStore);
+  // finalCreateStore = reduxReactRouter({ getRoutes, createHistory })(finalCreateStore);
 
   const reducer = require('./modules/reducer');
   const store = finalCreateStore(reducer, data);

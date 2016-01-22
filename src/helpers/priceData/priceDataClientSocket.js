@@ -2,8 +2,12 @@
 import { addTick, hydrate } from '../../redux/modules/price';
 import { INITIAL_DATA, NEW_TICK } from './MessageTypes';
 
+function createSocketUrl() {
+  return `ws://${window.location.hostname || 'localhost'}:3008`;
+}
+
 export function ticksHandler(dispatch) {
-  const ws = new WebSocket('ws://localhost:3008');
+  const ws = new WebSocket(createSocketUrl());
 
   ws.onopen = function open() {
     ws.send('something good!');

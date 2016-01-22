@@ -8,6 +8,7 @@ import httpProxy from 'http-proxy';
 import path from 'path';
 import createStore from './redux/create';
 import ApiClient from './helpers/ApiClient';
+import { ticksSource } from './helpers/SocketListener';
 import Html from './helpers/Html';
 import PrettyError from 'pretty-error';
 import http from 'http';
@@ -24,6 +25,7 @@ const proxy = httpProxy.createProxyServer({
   target: targetUrl,
   ws: true
 });
+ticksSource();
 
 app.use(compression());
 app.use(favicon(path.join(__dirname, '..', 'static', 'favicon.ico')));

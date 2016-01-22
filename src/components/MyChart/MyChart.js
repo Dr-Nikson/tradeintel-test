@@ -37,13 +37,13 @@ class CandleStickChartWithZoomPan extends Component {
           <Chart id={1} yMousePointerDisplayLocation="right" yMousePointerDisplayFormat={(y) => y.toFixed(2)}>
               <XAxis axisAt="bottom" orient="bottom" stroke="#FFFFFF" tickStroke="#FFFFFF" />
               <YAxis axisAt="right" orient="right" ticks={5} stroke="#FFFFFF" tickStroke="#FFFFFF" />
-              <DataSeries id={0} yAccessor={d => d.open + d.open * 0.2} >
+              <DataSeries id={0} yAccessor={d => d.ask} >
                   <LineSeries stroke="#FF7A00" />
               </DataSeries>
-              <DataSeries id={1} yAccessor={d => d.open} >
+              <DataSeries id={1} yAccessor={d => d.last} >
                   <LineSeries stroke="#FFFFFF"/>
               </DataSeries>
-              <DataSeries id={2} yAccessor={d => d.open - d.open * 0.2} >
+              <DataSeries id={2} yAccessor={d => d.bid} >
                   <LineSeries stroke="#006EFF" />
               </DataSeries>
           </Chart>
@@ -70,5 +70,3 @@ CandleStickChartWithZoomPan.defaultProps = {
 };
 
 export default fitWidth(CandleStickChartWithZoomPan);
-
-

@@ -115,6 +115,7 @@ function StockscaleTransformer() {
             row[key] = each[key];
           });
         indexMutator(row, i);
+        return row;
 
         row.startOfWeek = false;
         row.startOfMonth = false;
@@ -138,8 +139,10 @@ function StockscaleTransformer() {
         return row;
       });
     // console.table(responseData);
-    responseData.W = buildWeeklyData(responseData.D, indexMutator, dateAccessor, dateMutator);
-    responseData.M = buildMonthlyData(responseData.D, indexMutator, dateAccessor, dateMutator);
+    // responseData.W = buildWeeklyData(responseData.D, indexMutator, dateAccessor, dateMutator);
+    // responseData.W = [];
+    // responseData.M = buildMonthlyData(responseData.D, indexMutator, dateAccessor, dateMutator);
+    // responseData.M = [];
     return responseData;
   };
 

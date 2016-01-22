@@ -4,12 +4,11 @@ import { IndexLink } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import Helmet from 'react-helmet';
-import { isLoaded as isInfoLoaded, load as loadInfo } from 'redux/modules/info';
-import { isLoaded as isAuthLoaded, load as loadAuth, logout } from 'redux/modules/auth';
 import { InfoBar } from 'components';
 import { pushState } from 'redux-router';
 import connectData from 'helpers/connectData';
 import config from '../../config';
+import Home from '../Home/Home';
 
 function fetchData(getState, dispatch) {
   const promises = [];
@@ -22,47 +21,27 @@ function fetchData(getState, dispatch) {
   return Promise.all(promises);
 }
 
-@connectData(fetchData)
-@connect(
-  state => ({user: state.auth.user}),
-  {logout, pushState})
-export default class App extends Component {
+class App extends Component {
   static propTypes = {
-    children: PropTypes.object.isRequired,
-    user: PropTypes.object,
-    logout: PropTypes.func.isRequired,
-    pushState: PropTypes.func.isRequired
+    ticksData: PropTypes.array.isRequired,
   };
 
   static contextTypes = {
     store: PropTypes.object.isRequired
   };
 
-  componentWillReceiveProps(nextProps) {
-    if (!this.props.user && nextProps.user) {
-      // login
-      this.props.pushState(null, '/loginSuccess');
-    } else if (this.props.user && !nextProps.user) {
-      // logout
-      this.props.pushState(null, '/');
-    }
-  }
-
-  handleLogout = (event) => {
-    event.preventDefault();
-    this.props.logout();
-  }
-
   render() {
-    const {user} = this.props;
+    const { ticksData } = this.props;
     const styles = require('./App.scss');
 
     return (
       <div className={styles.app}>
         <Helmet {...config.app.head}/>
-        <h1>hello, worls</h1>
-        {this.props.children}
+        <Home priceData={ticksData} />
       </div>
     );
   }
 }
+
+
+export default connect(state => ({ticksData: state.price.ticksData}))(App);

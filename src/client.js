@@ -8,6 +8,7 @@ import createHistory from 'history/lib/createBrowserHistory';
 import useScroll from 'scroll-behavior/lib/useStandardScroll';
 import createStore from './redux/create';
 import ApiClient from './helpers/ApiClient';
+import { ticksHandler } from './helpers/SocketClient';
 import io from 'socket.io-client';
 import {Provider} from 'react-redux';
 /*import {reduxReactRouter, ReduxRouter} from 'redux-router';*/
@@ -38,12 +39,10 @@ function initSocket() {
   return socket;
 }
 
-global.socket = initSocket();
+global.socket = ticksHandler(store.dispatch);//initSocket();
 
 const component = (
-    <App>
-        <Home />
-    </App>
+    <App />
 );
 console.log(Provider, App, Home);
 
@@ -57,9 +56,9 @@ ReactDOM.render(
 if (process.env.NODE_ENV !== 'production') {
   window.React = React; // enable debugger
 
-  if (!dest || !dest.firstChild || !dest.firstChild.attributes || !dest.firstChild.attributes['data-react-checksum']) {
+  /*if (!dest || !dest.firstChild || !dest.firstChild.attributes || !dest.firstChild.attributes['data-react-checksum']) {
     console.error('Server-side React render was discarded. Make sure that your initial render does not contain any client-side code.');
-  }
+  }*/
 }
 
 if (__DEVTOOLS__ && !window.devToolsExtension) {

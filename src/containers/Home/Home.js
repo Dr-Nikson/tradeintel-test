@@ -1,31 +1,35 @@
 
 import React, { Component, PropTypes } from 'react';
 import Helmet from 'react-helmet';
-import MyChart from '../../components/MyChart/MyChart';
+import { connect } from 'react-redux';
+
+import { PriceTickChart } from '../../components';
 
 
-export default class Home extends Component {
+class Home extends Component {
 
   static propTypes = {
-    priceData: PropTypes.array.isRequired,
+    ticksData: PropTypes.array.isRequired,
   };
 
   render() {
     const styles = require('./Home.scss');
-    const { priceData } = this.props;
+    const { ticksData } = this.props;
 
     return (
       <div className={styles.home}>
         <Helmet title="Home"/>
         <div className={styles.masthead}>
           <div className="container">
-            <h1>Real time price ticks</h1>
+            <h1>EURUSD Currency</h1>
           </div>
         </div>
         <div>
-          { priceData.length && <MyChart data={priceData} type="hybrid" />}
+          { ticksData.length && <PriceTickChart data={ticksData} type="hybrid" />}
         </div>
       </div>
     );
   }
 }
+
+export default connect(state => ({ticksData: state.price.ticksData}))(Home);

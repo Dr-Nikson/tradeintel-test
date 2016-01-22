@@ -10,50 +10,50 @@ function secondsTimeScale(drawableData, indexAccessor, backingLinearScale, dateA
     return backingLinearScale(x);
   }
 
-  scale.isPolyLinear = function() {
+  scale.isPolyLinear = () => {
     return true;
   };
-  scale.invert = function(x) {
+  scale.invert = (x) => {
     return backingLinearScale.invert(x);
   };
-  scale.data = function(x) {
+  scale.data = function(x) {// eslint-disable-line func-names
     if (!arguments.length) {
       return drawableData;
-    } else {
-      drawableData = x;
-      // this.domain([drawableData.first().index, drawableData.last().index]);
-      this.domain([indexAccessor(drawableData[0]), indexAccessor(drawableData[drawableData.length - 1])]);
-      return scale;
     }
+    drawableData = x; // eslint-disable-line no-param-reassign
+    // this.domain([drawableData.first().index, drawableData.last().index]);
+    this.domain([indexAccessor(drawableData[0]), indexAccessor(drawableData[drawableData.length - 1])]);
+    return scale;
   };
-  scale.domain = function(x) {
-    if (!arguments.length) return backingLinearScale.domain();
+  scale.domain = (x) => {
+    if (!x) return backingLinearScale.domain();
     // console.log("before = %s, after = %s", JSON.stringify(backingLinearScale.domain()), JSON.stringify(x))
 
-    let d = [x[0], x[1]];
+    const d = [x[0], x[1]];
     // console.log(d);
     backingLinearScale.domain(d);
     return scale;
   };
-  scale.range = function(x) {
-    if (!arguments.length) return backingLinearScale.range();
+  scale.range = (x) => {
+    if (!x) return backingLinearScale.range();
+
     backingLinearScale.range(x);
     return scale;
   };
-  scale.rangeRound = function(x) {
+  scale.rangeRound = (x) => {
     return backingLinearScale.range(x);
   };
-  scale.clamp = function(x) {
-    if (!arguments.length) return backingLinearScale.clamp();
+  scale.clamp = (x) => {
+    if (!x) return backingLinearScale.clamp();
     backingLinearScale.clamp(x);
     return scale;
   };
-  scale.interpolate = function(x) {
-    if (!arguments.length) return backingLinearScale.interpolate();
+  scale.interpolate = (x) => {
+    if (!x) return backingLinearScale.interpolate();
     backingLinearScale.interpolate(x);
     return scale;
   };
-  scale.ticks = function(m) {
+  scale.ticks = (/* m */) => {
     const ticks = drawableData
         .filter(d => dateAccessor(d).getSeconds() % 10 === 0)
         .reduce((res, d) => {
@@ -74,24 +74,24 @@ function secondsTimeScale(drawableData, indexAccessor, backingLinearScale, dateA
     // return the index of all the ticks to be displayed,
     return ticks;
   };
-  scale.tickFormat = function(/* ticks */) {
-    return function(index) {
+  scale.tickFormat = (/* ticks */) => {
+    return (index) => {
       // for each index received from ticks() function derive the formatted output
       const tick = drawableData.find(item => indexAccessor(item) === index);
       return formater(tick);
     };
   };
-  scale.nice = function(m) {
+  scale.nice = (m) => {
     backingLinearScale.nice(m);
     return scale;
   };
-  scale.copy = function() {
+  scale.copy = () => {
     return secondsTimeScale(drawableData, indexAccessor, backingLinearScale.copy());
   };
   return scale;
 }
 
-const defaultFinanceDateTimeScale = function(indexAccessor) {
+const defaultFinanceDateTimeScale = (indexAccessor) => {
   return secondsTimeScale([0, 1], indexAccessor, d3.scale.linear());
 };
 

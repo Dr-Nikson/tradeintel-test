@@ -1,5 +1,5 @@
 
-import { addTick, hydrate } from '../redux/modules/price';
+import { addTick, hydrate } from '../../redux/modules/price';
 import { INITIAL_DATA, NEW_TICK } from './MessageTypes';
 
 export function ticksHandler(dispatch) {
@@ -9,8 +9,7 @@ export function ticksHandler(dispatch) {
     ws.send('something good!');
   };
 
-  ws.onmessage = function(messageEvent) {
-    console.log('MESSAGE ', messageEvent.data);
+  ws.onmessage = (messageEvent) => {
     const message = JSON.parse(messageEvent.data);
 
     switch (message.type) {

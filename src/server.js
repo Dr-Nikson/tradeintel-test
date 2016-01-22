@@ -6,19 +6,16 @@ import favicon from 'serve-favicon';
 import compression from 'compression';
 import httpProxy from 'http-proxy';
 import path from 'path';
-import createStore from './redux/create';
-import ApiClient from './helpers/ApiClient';
-import { ticksSource } from './helpers/SocketListener';
-import Html from './helpers/Html';
 import PrettyError from 'pretty-error';
 import http from 'http';
 
-import qs from 'query-string';
-// import getRoutes from './routes';
-// import getStatusFromRoutes from './helpers/getStatusFromRoutes';
+import createStore from './redux/create';
+import { ticksSource } from './helpers/priceData/priceDataServerSocket';
+import Html from './helpers/Html';
+
 
 const targetUrl = 'http://' + config.apiHost + ':' + config.apiPort;
-const pretty = new PrettyError();
+const pretty = new PrettyError(); // eslint-disable-line no-unused-vars
 const app = new Express();
 const server = new http.Server(app);
 const proxy = httpProxy.createProxyServer({
@@ -31,11 +28,6 @@ app.use(compression());
 app.use(favicon(path.join(__dirname, '..', 'static', 'favicon.ico')));
 
 app.use(Express.static(path.join(__dirname, '..', 'static')));
-
-// Proxy to API server
-app.use('/api', (req, res) => {
-  proxy.web(req, res, {target: targetUrl});
-});
 
 app.use('/ws', (req, res) => {
   proxy.web(req, res, {target: targetUrl + '/ws'});
@@ -65,9 +57,8 @@ app.use((req, res) => {
     // hot module replacement is enabled in the development env
     webpackIsomorphicTools.refresh();
   }
-  const client = new ApiClient(req);
 
-  const store = createStore(client);
+  const store = createStore();
 
   function hydrateOnClient() {
     res.send('<!doctype html>\n' +

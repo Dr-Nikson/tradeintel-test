@@ -1,8 +1,8 @@
 import { createStore as _createStore, applyMiddleware, compose } from 'redux';
-import createMiddleware from './middleware/clientMiddleware';
+import thunk from 'redux-thunk';
 
-export default function createStore(getRoutes, client, data) {
-  const middleware = [createMiddleware(client)];
+export default function createStore(data) {
+  const middleware = [ thunk ];
 
   let finalCreateStore;
   if (__DEVELOPMENT__ && __CLIENT__ && __DEVTOOLS__) {
@@ -16,8 +16,6 @@ export default function createStore(getRoutes, client, data) {
   } else {
     finalCreateStore = applyMiddleware(...middleware)(_createStore);
   }
-
-  // finalCreateStore = reduxReactRouter({ getRoutes, createHistory })(finalCreateStore);
 
   const reducer = require('./modules/reducer');
   const store = finalCreateStore(reducer, data);

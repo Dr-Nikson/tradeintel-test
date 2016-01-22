@@ -22,10 +22,12 @@ function fillDate(el) {
 export function ticksSource() {
   const wss = new Server({ port: 3008 });
 
-  console.log('priceData', priceData.length);
   wss.on('connection', function connection(ws) {
     let counter = 0;
     const interval = setInterval(() => {
+      if (counter + 200 >= priceData.length) {
+        ws.close();
+      }
       ws.send(createMessage(NEW_TICK, fillDate(priceData[200 + counter])));
       counter++;
     }, 350);

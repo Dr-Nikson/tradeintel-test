@@ -23,6 +23,7 @@ class Home extends Component {
           <div className="container">
             <h1>EURUSD Currency</h1>
           </div>
+          { !ticksData.length && <p>loading initial data ...</p> }
         </div>
         <div>
           { ticksData.length && <PriceTickChart data={ticksData} type="hybrid" />}

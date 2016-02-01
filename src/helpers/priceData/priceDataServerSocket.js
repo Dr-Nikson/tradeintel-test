@@ -4,6 +4,8 @@ import priceData from './priceData';
 import { INITIAL_DATA, NEW_TICK } from './MessageTypes';
 
 
+const finalPriceData = [ ...priceData, ...[...priceData].reverse(), ...priceData ];
+
 function createMessage(type, body) {
   return JSON.stringify({ type, body });
 }
@@ -25,18 +27,20 @@ export function ticksSource() {
   wss.on('connection', function connection(ws) {
     let counter = 0;
     const interval = setInterval(() => {
-      if (counter + 200 >= priceData.length) {
+      if (counter + 3000 >= finalPriceData.length) {
         ws.close();
       }
-      ws.send(createMessage(NEW_TICK, fillDate(priceData[200 + counter])));
+      ws.send(createMessage(NEW_TICK, fillDate(finalPriceData[3000 + counter])));
       counter++;
     }, 350);
+
+    // console.log('finalPriceData.length = ', finalPriceData.length);
 
     ws.on('message', function incoming(message) {
       console.log('received: %s', message);
     });
 
-    ws.send(createMessage(INITIAL_DATA, getInitialData(priceData, 200)));
+    ws.send(createMessage(INITIAL_DATA, getInitialData(finalPriceData, 3000)));
     ws.on('close', () => clearInterval(interval));
     ws.on('error', () => clearInterval(interval));
   });
